@@ -2,14 +2,9 @@ import pandas as pd
 import re
 from opencc import OpenCC
 from collections import Counter
-# from ckiptagger import data_utils, WS, POS
 from ckip import CkipSegmenter
 segmenter = CkipSegmenter()
 import zipfile
-
-# open zipped CKIP model 
-# with zipfile.ZipFile("data.zip", 'r') as zip_ref:
-#     zip_ref.extractall()
 
 forum = pd.read_csv("forums.csv",names = ["board_name","alias","board_url"])
 post_id = pd.read_csv("post_id.csv", names = ["post_id","board_name","post_title","post_excerpt","created_at", "updated_at" ])
@@ -35,7 +30,6 @@ def cleaning(string):
   return clean_txt
 
 # tokenization 
-# ws = WS("./data")
 def tokenization(post):
   try:
     if len(post) > 1:
@@ -102,14 +96,8 @@ post["type"] = "post"
 comment["type"] = "comment"
 post["clean_txt"] = post.post_content.apply(cleaning)
 comment["clean_txt"] = comment.comment_content.apply(cleaning)
-
-# segmenter.batch_seg(corpus)
-
-# post["token"] = ws(post["clean_txt"])
-# comment["token"] = ws(comment["clean_txt"])
 post["token"] = post.clean_txt.apply(tokenization)
 comment["token"] = comment.clean_txt.apply(tokenization)
-
 post["no_stop"] = post.token.apply(no_stop)
 comment["no_stop"] = comment.token.apply(no_stop)
 post["keywords"] = post.no_stop.apply(keyword)
